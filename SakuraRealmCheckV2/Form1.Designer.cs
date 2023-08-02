@@ -32,11 +32,13 @@
             label1 = new Label();
             btnGetFiles = new Button();
             progressBar1 = new ProgressBar();
+            checkBox1 = new CheckBox();
             SuspendLayout();
             // 
             // lbResults
             // 
             lbResults.FormattingEnabled = true;
+            lbResults.HorizontalScrollbar = true;
             lbResults.ItemHeight = 24;
             lbResults.Location = new Point(12, 12);
             lbResults.Name = "lbResults";
@@ -69,11 +71,23 @@
             progressBar1.Size = new Size(769, 35);
             progressBar1.TabIndex = 3;
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(556, 431);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(108, 28);
+            checkBox1.TabIndex = 4;
+            checkBox1.Text = "精确检测";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += checkBox1_CheckedChanged_1;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(792, 484);
+            Controls.Add(checkBox1);
             Controls.Add(progressBar1);
             Controls.Add(btnGetFiles);
             Controls.Add(label1);
@@ -90,5 +104,6 @@
         private Label label1;
         private Button btnGetFiles;
         private ProgressBar progressBar1;
+        private CheckBox checkBox1;
     }
 }
