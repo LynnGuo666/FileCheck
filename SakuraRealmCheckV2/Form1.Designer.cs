@@ -37,6 +37,8 @@
             checkBox2 = new CheckBox();
             linkLabel1 = new LinkLabel();
             linkLabel2 = new LinkLabel();
+            linkLabel3 = new LinkLabel();
+            checkBox3 = new CheckBox();
             SuspendLayout();
             // 
             // lbResults
@@ -56,7 +58,8 @@
             label1.Name = "label1";
             label1.Size = new Size(255, 48);
             label1.TabIndex = 1;
-            label1.Text = "Version 2.1 | By LynnGuo666\r\n\r\n";
+            label1.Text = "Version 2.3 | By LynnGuo666\r\n\r\n";
+            label1.Click += label1_Click;
             // 
             // btnGetFiles
             // 
@@ -112,20 +115,44 @@
             // linkLabel2
             // 
             linkLabel2.AutoSize = true;
-            linkLabel2.Location = new Point(13, 467);
+            linkLabel2.Location = new Point(433, 467);
             linkLabel2.Name = "linkLabel2";
             linkLabel2.Size = new Size(82, 24);
             linkLabel2.TabIndex = 7;
             linkLabel2.TabStop = true;
             linkLabel2.Text = "赞助作者";
-            linkLabel2.Visible = false;
             linkLabel2.LinkClicked += linkLabel2_LinkClicked;
+            // 
+            // linkLabel3
+            // 
+            linkLabel3.AutoSize = true;
+            linkLabel3.Location = new Point(13, 467);
+            linkLabel3.Name = "linkLabel3";
+            linkLabel3.Size = new Size(244, 24);
+            linkLabel3.TabIndex = 8;
+            linkLabel3.TabStop = true;
+            linkLabel3.Text = "下载速度慢？尝试下载预载包";
+            linkLabel3.LinkClicked += linkLabel3_LinkClicked;
+            // 
+            // checkBox3
+            // 
+            checkBox3.AutoSize = true;
+            checkBox3.Enabled = false;
+            checkBox3.Location = new Point(307, 431);
+            checkBox3.Name = "checkBox3";
+            checkBox3.Size = new Size(108, 28);
+            checkBox3.TabIndex = 9;
+            checkBox3.Text = "国内镜像";
+            checkBox3.UseVisualStyleBackColor = true;
+            checkBox3.CheckedChanged += checkBox3_CheckedChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(792, 500);
+            Controls.Add(checkBox3);
+            Controls.Add(linkLabel3);
             Controls.Add(linkLabel2);
             Controls.Add(linkLabel1);
             Controls.Add(checkBox2);
@@ -151,5 +178,7 @@
         private CheckBox checkBox2;
         private LinkLabel linkLabel1;
         private LinkLabel linkLabel2;
+        private LinkLabel linkLabel3;
+        private CheckBox checkBox3;
     }
 }
