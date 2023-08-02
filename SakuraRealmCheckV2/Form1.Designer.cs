@@ -35,7 +35,8 @@
             progressBar1 = new ProgressBar();
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
-            button1 = new Button();
+            linkLabel1 = new LinkLabel();
+            linkLabel2 = new LinkLabel();
             SuspendLayout();
             // 
             // lbResults
@@ -51,11 +52,11 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(13, 427);
+            label1.Location = new Point(525, 467);
             label1.Name = "label1";
-            label1.Size = new Size(118, 24);
+            label1.Size = new Size(255, 48);
             label1.TabIndex = 1;
-            label1.Text = "客户端版本：";
+            label1.Text = "Version 2.1 | By LynnGuo666\r\n\r\n";
             // 
             // btnGetFiles
             // 
@@ -88,6 +89,8 @@
             // checkBox2
             // 
             checkBox2.AutoSize = true;
+            checkBox2.Checked = true;
+            checkBox2.CheckState = CheckState.Checked;
             checkBox2.Location = new Point(433, 431);
             checkBox2.Name = "checkBox2";
             checkBox2.Size = new Size(108, 28);
@@ -95,22 +98,36 @@
             checkBox2.Text = "自动补全";
             checkBox2.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // linkLabel1
             // 
-            button1.Location = new Point(305, 427);
-            button1.Name = "button1";
-            button1.Size = new Size(112, 34);
-            button1.TabIndex = 6;
-            button1.Text = "检测文件";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            linkLabel1.AutoSize = true;
+            linkLabel1.Location = new Point(13, 432);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(82, 24);
+            linkLabel1.TabIndex = 6;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "帮助中心";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
+            // 
+            // linkLabel2
+            // 
+            linkLabel2.AutoSize = true;
+            linkLabel2.Location = new Point(13, 467);
+            linkLabel2.Name = "linkLabel2";
+            linkLabel2.Size = new Size(82, 24);
+            linkLabel2.TabIndex = 7;
+            linkLabel2.TabStop = true;
+            linkLabel2.Text = "赞助作者";
+            linkLabel2.Visible = false;
+            linkLabel2.LinkClicked += linkLabel2_LinkClicked;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(792, 484);
-            Controls.Add(button1);
+            ClientSize = new Size(792, 500);
+            Controls.Add(linkLabel2);
+            Controls.Add(linkLabel1);
             Controls.Add(checkBox2);
             Controls.Add(checkBox1);
             Controls.Add(progressBar1);
@@ -132,6 +149,7 @@
         private ProgressBar progressBar1;
         private CheckBox checkBox1;
         private CheckBox checkBox2;
-        private Button button1;
+        private LinkLabel linkLabel1;
+        private LinkLabel linkLabel2;
     }
 }

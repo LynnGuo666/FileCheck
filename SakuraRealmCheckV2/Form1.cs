@@ -1,5 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SakuraRealmCheckV2
 {
@@ -12,9 +20,11 @@ namespace SakuraRealmCheckV2
 
         private async void btnGetFiles_Click(object sender, EventArgs e)
         {
-            string url = "https://pan.lynn6.cn/f/AWhp/files_list_md5.txt"; // 替换成实际的URL
+            string url = "https://download-us.34036330.xyz/d/global/files_list_md5.txt"; // 替换成实际的URL
             string filePath = "files.txt"; // 保存文件列表的文件路径
-
+            btnGetFiles.Enabled = false;
+            btnGetFiles.Text = "获取中";
+            lbResults.Items.Clear();
             try
             {
                 await Task.Run(async () =>
@@ -23,8 +33,8 @@ namespace SakuraRealmCheckV2
                     {
                         string content = await client.GetStringAsync(url);
                         File.WriteAllText(filePath, content);
-                        MessageBox.Show("文件列表已成功获取并保存为 files.txt。");
-
+                        // MessageBox.Show("文件列表已成功获取并保存为 files.txt。");
+                        btnGetFiles.Text = "检测中";
                         // 在获取文件列表后进行文件存在性检测，并显示进度条
                         PerformFileExistenceCheck(filePath);
                     }
@@ -114,7 +124,7 @@ namespace SakuraRealmCheckV2
 
                         lbResults.Invoke((Action)(() => lbResults.Items.Add(message)));
 
-                        if (checkBox2.Checked && !fileExists)
+                        if (checkBox2.Checked && (!fileExists || (shouldCompareMD5 && !md5Matches)))
                         {
                             missingFiles.Add(fileName);
                         }
@@ -127,6 +137,14 @@ namespace SakuraRealmCheckV2
                 if (checkBox2.Checked && missingFiles.Count > 0)
                 {
                     DownloadMissingFiles(missingFiles);
+                    btnGetFiles.Enabled = false;
+                    btnGetFiles.Text = "补全中";
+                }
+                else
+                {
+                    btnGetFiles.Enabled = true;
+                    btnGetFiles.Text = "开始检测";
+                    MessageBox.Show("检测完成！");
                 }
             }
             else
@@ -145,11 +163,19 @@ namespace SakuraRealmCheckV2
             {
                 using (HttpClient client = new HttpClient())
                 {
+                    progressBar1.Invoke((Action)(() => progressBar1.Value = 0)); // 重置进度条
+                    progressBar1.Invoke((Action)(() => progressBar1.Maximum = missingFiles.Count));
+
+                    int progress = 0;
+
                     foreach (string missingFile in missingFiles)
                     {
                         string clientPath = Path.Combine(installationDirectory, missingFile);
                         string serverUrl = serverBaseUrl + missingFile;
                         await DownloadFileAsync(client, serverUrl, clientPath);
+
+                        // 更新进度条的值
+                        progressBar1.Invoke((Action)(() => progressBar1.Value = ++progress));
                     }
                 }
             }
@@ -157,9 +183,10 @@ namespace SakuraRealmCheckV2
             {
                 MessageBox.Show("下载文件时出现错误：" + ex.Message);
             }
+            btnGetFiles.Enabled = true;
+            btnGetFiles.Text = "开始检测";
+            MessageBox.Show("补全完成！");
         }
-
-
 
         private bool VerifyFileMD5(string filePath, string expectedMD5Info)
         {
@@ -187,7 +214,6 @@ namespace SakuraRealmCheckV2
             // 比较实际MD5值与预期MD5值是否匹配
         }
 
-
         public static string GetMD5HashFromFile(string fileName)
         {
             try
@@ -210,14 +236,10 @@ namespace SakuraRealmCheckV2
             }
         }
 
-
-
         private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
         {
             lbResults.Items.Clear();
-
         }
-
 
         // 辅助方法，用于异步下载文件
         private async Task DownloadFileAsync(HttpClient client, string url, string filePath)
@@ -226,7 +248,7 @@ namespace SakuraRealmCheckV2
             {
                 byte[] fileData = await client.GetByteArrayAsync(url);
                 File.WriteAllBytes(filePath, fileData);
-                lbResults.Invoke((Action)(() => lbResults.Items.Add($"已下载文件：{filePath},{url}")));
+                lbResults.Invoke((Action)(() => lbResults.Items.Add($"已下载文件：{filePath}")));
             }
             catch (Exception ex)
             {
@@ -236,7 +258,19 @@ namespace SakuraRealmCheckV2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // 点击按钮后执行文件获取
+            btnGetFiles_Click(sender, e);
+        }
 
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string url = "https://help.yumoe.top";
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://afdian.com/a/lynnguo666");
         }
     }
 }
