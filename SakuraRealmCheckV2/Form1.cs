@@ -53,10 +53,12 @@ namespace SakuraRealmCheckV2
 
                 // 设置进度条的最大值为文件数量
                 progressBar1.Invoke((Action)(() => progressBar1.Maximum = fileEntries.Length));
-                int progress = 0;
+                int progress = 1;
 
                 // 获取是否需要比对MD5的选择状态
                 bool shouldCompareMD5 = checkBox1.Checked;
+
+                List<string> missingFiles = new List<string>();
 
                 foreach (string fileEntry in fileEntries)
                 {
@@ -82,7 +84,7 @@ namespace SakuraRealmCheckV2
                     bool md5Matches = false;
 
                     string localMD5 = "N/A";
-                    string cloudMD5 = "N/A";
+                    md5Info = md5Info.Replace("MD5: ", "");
 
                     if (shouldCompareMD5 && fileExists)
                     {
@@ -103,7 +105,7 @@ namespace SakuraRealmCheckV2
                         }
                         message += $"{installationDirectory}";
 
-                        if (shouldCompareMD5 && !md5Matches)
+                        if (shouldCompareMD5 && md5Matches == false)
                         {
                             message += "，但MD5校验不匹配";
                         }
@@ -111,10 +113,20 @@ namespace SakuraRealmCheckV2
                         message += $"，本地MD5: {localMD5}，云端MD5: {md5Info}";
 
                         lbResults.Invoke((Action)(() => lbResults.Items.Add(message)));
+
+                        if (checkBox2.Checked && !fileExists)
+                        {
+                            missingFiles.Add(fileName);
+                        }
                     }
 
                     // 更新进度条的值
                     progressBar1.Invoke((Action)(() => progressBar1.Value = ++progress));
+                }
+
+                if (checkBox2.Checked && missingFiles.Count > 0)
+                {
+                    DownloadMissingFiles(missingFiles);
                 }
             }
             else
@@ -122,6 +134,31 @@ namespace SakuraRealmCheckV2
                 MessageBox.Show("指定的安装目录不存在！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // 新增方法：下载缺失的文件
+        private async void DownloadMissingFiles(List<string> missingFiles)
+        {
+            string serverBaseUrl = "https://download-us.34036330.xyz/d/global/Game/";
+            string installationDirectory = Path.Combine(Application.StartupPath, "Game");
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    foreach (string missingFile in missingFiles)
+                    {
+                        string clientPath = Path.Combine(installationDirectory, missingFile);
+                        string serverUrl = serverBaseUrl + missingFile;
+                        await DownloadFileAsync(client, serverUrl, clientPath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("下载文件时出现错误：" + ex.Message);
+            }
+        }
+
 
 
         private bool VerifyFileMD5(string filePath, string expectedMD5Info)
@@ -132,17 +169,24 @@ namespace SakuraRealmCheckV2
             int startIndex = expectedMD5Info.IndexOf("[MD5: ") + 6;
             int endIndex = expectedMD5Info.IndexOf("]");
 
-            if (startIndex < 0 || endIndex < 0)
+            //            if (startIndex < 0 || endIndex < 0)
+            //            {
+            // 无效的MD5信息格式
+            //                return false;
+            //            }
+            string expectedMD5 = expectedMD5Info;
+
+            if (actualMD5 == expectedMD5Info)
             {
-                // 无效的MD5信息格式
+                return true;
+            }
+            else
+            {
                 return false;
             }
-
-            string expectedMD5 = expectedMD5Info.Substring(startIndex, endIndex - startIndex).ToLower();
-
             // 比较实际MD5值与预期MD5值是否匹配
-            return actualMD5 == expectedMD5;
         }
+
 
         public static string GetMD5HashFromFile(string fileName)
         {
@@ -171,6 +215,27 @@ namespace SakuraRealmCheckV2
         private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
         {
             lbResults.Items.Clear();
+
+        }
+
+
+        // 辅助方法，用于异步下载文件
+        private async Task DownloadFileAsync(HttpClient client, string url, string filePath)
+        {
+            try
+            {
+                byte[] fileData = await client.GetByteArrayAsync(url);
+                File.WriteAllBytes(filePath, fileData);
+                lbResults.Invoke((Action)(() => lbResults.Items.Add($"已下载文件：{filePath},{url}")));
+            }
+            catch (Exception ex)
+            {
+                lbResults.Invoke((Action)(() => lbResults.Items.Add($"下载文件 {url} 时出现错误：{ex.Message}")));
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
 
         }
     }

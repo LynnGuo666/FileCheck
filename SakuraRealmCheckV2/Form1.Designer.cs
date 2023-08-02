@@ -28,11 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             lbResults = new ListBox();
             label1 = new Label();
             btnGetFiles = new Button();
             progressBar1 = new ProgressBar();
             checkBox1 = new CheckBox();
+            checkBox2 = new CheckBox();
+            button1 = new Button();
             SuspendLayout();
             // 
             // lbResults
@@ -60,7 +63,7 @@
             btnGetFiles.Name = "btnGetFiles";
             btnGetFiles.Size = new Size(112, 34);
             btnGetFiles.TabIndex = 2;
-            btnGetFiles.Text = "重新检测";
+            btnGetFiles.Text = "检测文件";
             btnGetFiles.UseVisualStyleBackColor = true;
             btnGetFiles.Click += btnGetFiles_Click;
             // 
@@ -82,18 +85,41 @@
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged_1;
             // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(433, 431);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(108, 28);
+            checkBox2.TabIndex = 5;
+            checkBox2.Text = "自动补全";
+            checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(305, 427);
+            button1.Name = "button1";
+            button1.Size = new Size(112, 34);
+            button1.TabIndex = 6;
+            button1.Text = "检测文件";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(792, 484);
+            Controls.Add(button1);
+            Controls.Add(checkBox2);
             Controls.Add(checkBox1);
             Controls.Add(progressBar1);
             Controls.Add(btnGetFiles);
             Controls.Add(label1);
             Controls.Add(lbResults);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
-            Text = "Form1";
+            Text = "文件缺失比对工具";
             ResumeLayout(false);
             PerformLayout();
         }
@@ -105,5 +131,7 @@
         private Button btnGetFiles;
         private ProgressBar progressBar1;
         private CheckBox checkBox1;
+        private CheckBox checkBox2;
+        private Button button1;
     }
 }
