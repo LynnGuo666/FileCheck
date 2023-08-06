@@ -8,6 +8,8 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+
 
 namespace SakuraRealmCheckV2
 {
@@ -20,23 +22,52 @@ namespace SakuraRealmCheckV2
 
         private async void btnGetFiles_Click(object sender, EventArgs e)
         {
-            string url = "https://download-us.34036330.xyz/d/global/files_list_md5.txt"; // 替换成实际的URL
-            string filePath = "files.txt"; // 保存文件列表的文件路径
+            string jsonUrl = "https://setup-online.lynnguo666.workers.dev/?id=sakurarealm"; // 获取 JSON 数据的云端链接
+            string filePath = "files.txt"; // 保存 files.txt 内容的本地文件路径
+            string skipPath = "skip.txt"; // 保存 skip.txt 内容的本地文件路径
+            string deletePath = "delete.txt";
+
             btnGetFiles.Enabled = false;
             btnGetFiles.Text = "获取中";
             lbResults.Items.Clear();
+
             try
             {
                 await Task.Run(async () =>
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        string content = await client.GetStringAsync(url);
-                        File.WriteAllText(filePath, content);
-                        // MessageBox.Show("文件列表已成功获取并保存为 files.txt。");
+                        // 从云端获取 JSON 数据
+                        string jsonContent = await client.GetStringAsync(jsonUrl);
+
+                        // 解析 JSON 数据
+                        dynamic jsonData = JsonConvert.DeserializeObject(jsonContent);
+                        string filesUrl = jsonData.list;
+                        string skipUrl = jsonData.skip;
+                        string deleteUrl = jsonData.delete; 
+
+
+                        // 从云端获取 files.txt
+                        string filesContent = await client.GetStringAsync(filesUrl);
+                        File.WriteAllText(filePath, filesContent);
+
+                        // 从云端获取 skip.txt
+                        string skipContent = await client.GetStringAsync(skipUrl);
+                        File.WriteAllText(skipPath, skipContent);
+                        // 获取Delete.txt
+                        string deleteContent = await client.GetStringAsync(deleteUrl);
+                        File.WriteAllText(deletePath, deleteContent);
+
                         btnGetFiles.Text = "检测中";
-                        // 在获取文件列表后进行文件存在性检测，并显示进度条
-                        PerformFileExistenceCheck(filePath);
+
+                        // 获取完两个文件后，进行文件存在性检测
+                        PerformFileExistenceCheck(filePath, skipPath);
+
+                        // 检测结束后，开始删除文件
+
+                        DeleteFilesFromDeleteList(deleteUrl);
+
+
                     }
                 });
             }
@@ -46,14 +77,14 @@ namespace SakuraRealmCheckV2
             }
         }
 
-        private void PerformFileExistenceCheck(string filePath)
+        private void PerformFileExistenceCheck(string filePath, string skipPath)
         {
             string installationDirectory = Path.Combine(Application.StartupPath, "Game");
 
             if (Directory.Exists(installationDirectory))
             {
                 string[] fileEntries = File.ReadAllLines(filePath);
-                string[] skipItems = File.ReadAllLines("skip.txt");
+                string[] skipItems = File.ReadAllLines(skipPath);
 
                 HashSet<string> skipSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 foreach (string skipItem in skipItems)
@@ -255,6 +286,49 @@ namespace SakuraRealmCheckV2
                 lbResults.Invoke((Action)(() => lbResults.Items.Add($"下载文件 {url} 时出现错误：{ex.Message}")));
             }
         }
+        private async Task DeleteFilesFromDeleteList(string deletePath)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    // 获取 delete.txt 内容
+                    string deleteContent = await client.GetStringAsync(deletePath);
+                    string installationDirectory = Path.Combine(Application.StartupPath, "Game");
+
+                    // 删除文件列表中的每个文件
+                    string[] filesToDelete = deleteContent.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string fileToDelete in filesToDelete)
+                    {
+                        string fileName = fileToDelete.Trim();
+                        string filePath = Path.Combine(installationDirectory, fileName);
+
+                        // 确保文件存在后再进行删除
+                        if (File.Exists(filePath))
+                        {
+                            try
+                            {
+                                File.Delete(filePath);
+                                lbResults.Invoke((Action)(() => lbResults.Items.Add($"已删除文件：{filePath}")));
+                            }
+                            catch (Exception ex)
+                            {
+                                lbResults.Invoke((Action)(() => lbResults.Items.Add($"删除文件 {filePath} 时出现错误：{ex.Message}")));
+                            }
+                        }
+                        else
+                        {
+                            lbResults.Invoke((Action)(() => lbResults.Items.Add($"文件 {filePath} 不存在，无需删除。")));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("删除文件时出现错误：" + ex.Message);
+            }
+        }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
