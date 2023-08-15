@@ -35,10 +35,10 @@
             progressBar1 = new ProgressBar();
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
-            linkLabel1 = new LinkLabel();
             linkLabel2 = new LinkLabel();
-            linkLabel3 = new LinkLabel();
             checkBox3 = new CheckBox();
+            linkLabel1 = new LinkLabel();
+            linkLabel3 = new LinkLabel();
             SuspendLayout();
             // 
             // lbResults
@@ -92,25 +92,13 @@
             // checkBox2
             // 
             checkBox2.AutoSize = true;
-            checkBox2.Checked = true;
-            checkBox2.CheckState = CheckState.Checked;
+            checkBox2.Enabled = false;
             checkBox2.Location = new Point(433, 431);
             checkBox2.Name = "checkBox2";
             checkBox2.Size = new Size(108, 28);
             checkBox2.TabIndex = 5;
             checkBox2.Text = "自动补全";
             checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // linkLabel1
-            // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.Location = new Point(13, 432);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(82, 24);
-            linkLabel1.TabIndex = 6;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "帮助中心";
-            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
             // linkLabel2
             // 
@@ -123,17 +111,6 @@
             linkLabel2.Text = "赞助作者";
             linkLabel2.LinkClicked += linkLabel2_LinkClicked;
             // 
-            // linkLabel3
-            // 
-            linkLabel3.AutoSize = true;
-            linkLabel3.Location = new Point(13, 467);
-            linkLabel3.Name = "linkLabel3";
-            linkLabel3.Size = new Size(244, 24);
-            linkLabel3.TabIndex = 8;
-            linkLabel3.TabStop = true;
-            linkLabel3.Text = "下载速度慢？尝试下载预载包";
-            linkLabel3.LinkClicked += linkLabel3_LinkClicked;
-            // 
             // checkBox3
             // 
             checkBox3.AutoSize = true;
@@ -145,6 +122,28 @@
             checkBox3.Text = "国内镜像";
             checkBox3.UseVisualStyleBackColor = true;
             checkBox3.CheckedChanged += checkBox3_CheckedChanged;
+            // 
+            // linkLabel1
+            // 
+            linkLabel1.AutoSize = true;
+            linkLabel1.Location = new Point(13, 432);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(82, 24);
+            linkLabel1.TabIndex = 6;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "帮助中心";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
+            // 
+            // linkLabel3
+            // 
+            linkLabel3.AutoSize = true;
+            linkLabel3.Location = new Point(13, 467);
+            linkLabel3.Name = "linkLabel3";
+            linkLabel3.Size = new Size(244, 24);
+            linkLabel3.TabIndex = 8;
+            linkLabel3.TabStop = true;
+            linkLabel3.Text = "下载速度慢？尝试下载预载包";
+            linkLabel3.LinkClicked += linkLabel3_LinkClicked;
             // 
             // Form1
             // 
@@ -176,9 +175,9 @@
         private ProgressBar progressBar1;
         private CheckBox checkBox1;
         private CheckBox checkBox2;
-        private LinkLabel linkLabel1;
         private LinkLabel linkLabel2;
-        private LinkLabel linkLabel3;
         private CheckBox checkBox3;
+        private LinkLabel linkLabel1;
+        private LinkLabel linkLabel3;
     }
 }

@@ -44,7 +44,7 @@ namespace SakuraRealmCheckV2
                         dynamic jsonData = JsonConvert.DeserializeObject(jsonContent);
                         string filesUrl = jsonData.list;
                         string skipUrl = jsonData.skip;
-                        string deleteUrl = jsonData.delete; 
+                        string deleteUrl = jsonData.delete;
 
 
                         // ¥”‘∆∂ÀªÒ»° files.txt
