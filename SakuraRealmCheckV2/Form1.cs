@@ -348,20 +348,6 @@ namespace SakuraRealmCheckV2
             Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
         }
 
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            string url = "https://help.yumoe.top/?p=SakuraRealmLauncherV3-Preload";
-            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-        }
-
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox3.Enabled == false)
-            {
-                MessageBox.Show("您尚未拥有该功能的权限！");
-            }
-
-        }
 
         private void label1_Click(object sender, EventArgs e)
         {
